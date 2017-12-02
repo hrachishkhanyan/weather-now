@@ -1,0 +1,16 @@
+{
+  "private": {
+    "opm": {
+      "apikey": "cb6c7940595fa5fa4e6320261c50c3f7"
+    },
+    "gp": {
+      "apikey": "AIzaSyDkS7D6feiEr0Vd_P-efvwBMlJoXrP5MrE"
+    }
+  },
+  "public": {
+    "gp": {
+      "apikey": "AIzaSyDkS7D6feiEr0Vd_P-efvwBMlJoXrP5MrE"
+    }
+  }
+
+}

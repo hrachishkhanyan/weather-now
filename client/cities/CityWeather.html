@@ -1,0 +1,40 @@
+<template name="CityWeather">
+  <section>
+    <table class="ui celled padded table">
+<thead>
+  <tr>
+    <th></th>
+    <th class="single line">Today</th>
+    {{#each date}}
+      <th>{{this}}</th>
+    {{/each}}
+</tr></thead>
+<tbody id="weatherTable">
+  <tr>
+    <td>Day</td>
+    {{#each weatherDay}}
+    <td>
+      <h2 class="ui center aligned header">{{this.main.temp}} &#8451;</h2>
+    </td>
+    {{/each}}
+  </tr>
+  <tr>
+    <td>Night</td>
+    {{#each weatherNight}}
+    <td>
+      <h2 class="ui center aligned header">{{this.main.temp}} &#8451;</h2>
+    </td>
+    {{/each}}
+  </tr>
+
+
+</tbody>
+</table>
+  <section class="weather-chart">
+    <div id="chart_div">
+
+    </div>
+  </section>
+
+  </section>
+</template>

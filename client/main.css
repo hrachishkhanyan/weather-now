@@ -1,0 +1,88 @@
+/* CSS declarations go here */
+body {
+  background-image: url("background.jpg");
+}
+
+h1 {
+  font-family: Apple Chancery, cursive !important;
+  font-size: 3rem !important;
+  padding: 0.1em !important;
+}
+
+h4 {
+  cursor: pointer;
+}
+
+#header {
+  float: left;
+  width: 18%;
+}
+
+#map {
+        height: 400px;
+        width: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+.description-box {
+  width: 100%;
+  height: 56px;
+  overflow:hidden;
+}
+
+.description-box.show {
+  height: auto;
+  overflow: visible;
+}
+
+
+.city-image {
+  width: 128px;
+  height: 128px;
+}
+
+/*.city-image:hover {
+    height: 400px !important;
+    width: 400px !important;
+}*/
+
+#cityName {
+  font-family: Apple Chancery, cursive;
+  color: black;
+}
+
+.center {
+  padding: 10px;
+  margin-left: 40%;
+}
+
+.location-div {
+  display: inline-block;
+  margin-left: 100px;
+}
+
+.city {
+  cursor: pointer;
+}
+
+#cityName:hover {
+  text-shadow: 0 0 3px #4286f4, 0 0 5px #0000FF;
+}
+
+button {
+
+  margin-left: 4px !important;
+
+}
+
+.center.err-msg {
+  color: #cc0000;
+  margin-left: 45% !important;
+}
+
+a {
+  text-decoration: none !important;
+}

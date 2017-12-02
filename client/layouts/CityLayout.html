@@ -1,0 +1,35 @@
+<template name="CityLayout">
+  
+  <!-- <script type="text/javascript">
+    var initMap = function(){}
+  </script> -->
+  <header>
+    {{>Header}}
+  </header>
+  <main>
+    <div style="display: inline-block">
+      <h1>
+        {{name}}
+      </h1>
+    </div>
+    <div class="location-div">
+      <h3>
+        {{#if loaded}}
+          Weather now in {{currentLocation}}: {{weatherNow}} &#8451;
+        {{else}}
+          Getting current location...
+        {{/if}}
+      </h3>
+    </div>
+    <div class="weather-board">
+      {{> CityWeather}}
+    </div>
+    <div id="map">
+      {{> CityMap}}
+    </div>
+    <div>
+      {{> CityDescription}}
+    </div>
+
+  </main>
+</template>

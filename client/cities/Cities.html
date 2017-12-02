@@ -1,0 +1,8 @@
+<template name="Cities">
+  {{> NewCity}}
+  <div class="ui grid container">
+    {{#each cities}}
+      {{> City }}
+    {{/each}}
+  </div>
+</template>

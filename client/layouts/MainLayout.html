@@ -1,0 +1,13 @@
+<template name="MainLayout">
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjuHYNi7VQJBa9ofecAIHbV9d_kx2LR08&libraries=places&callback=autoCompletePlaces"
+        async defer></script>
+  <header>
+    {{> Header}}
+  </header>
+  <main>
+    <div>
+      {{> Template.dynamic template=main}}
+    </div>
+ </main>
+
+</template>
