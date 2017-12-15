@@ -1,6 +1,25 @@
 /* CSS declarations go here */
+
+
+.login {
+  width:250px;
+  height:300px;
+  border-radius:4px;
+  box-shadow:-2px 2px 21px #190A0A;
+  position:absolute; top:30px;
+  right:30px;
+  z-index:1;
+  background-color:#fff;
+  text-align:center;
+}
+
+.login input {
+  width:180px !important;
+  margin:auto !important;
+}
+
 body {
-  background-image: url("background.jpg");
+  background-image: url("background1.jpg");
 }
 
 h1 {
@@ -43,11 +62,6 @@ h4 {
   width: 128px;
   height: 128px;
 }
-
-/*.city-image:hover {
-    height: 400px !important;
-    width: 400px !important;
-}*/
 
 #cityName {
   font-family: Apple Chancery, cursive;

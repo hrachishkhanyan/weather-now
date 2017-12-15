@@ -1,7 +1,7 @@
 import isoCountries from '/countryCodes.js';;
 import { ReactiveVar } from 'meteor/reactive-var';
 
-const ErrorMessage = new ReactiveVar('');
+const errorMessage = new ReactiveVar('');
 
 Template.NewCity.events({
   submit: function (event) {
@@ -10,6 +10,12 @@ Template.NewCity.events({
       const input = $('#input');
       const inputText = input.val().split(',');
       const city = inputText[0];
+
+      if(!Session.get('currentUser')) {
+        $('#inputDiv').addClass('error');
+        errorMessage.set('Anauthorized user');
+        return;
+      }
 
       if(!city) {
         return;
@@ -26,12 +32,12 @@ Template.NewCity.events({
           Meteor.call('cities.insert', { city, countryName, coords, photoUrl }, (err, res) => {
             if(err) {
               if(err.message) {
-                ErrorMessage.set(err.error);
+                errorMessage.set(err.error);
               }
 
               console.log('Err: ', err);
               } else {
-                  ErrorMessage.set(' ');
+                  errorMessage.set(' ');
                   input.val('');
                 }
           })
@@ -42,7 +48,7 @@ Template.NewCity.events({
 
   Template.NewCity.helpers({
     ErrorMsg: () => {
-        return ErrorMessage.get();
+        return errorMessage.get();
 
     }
   })

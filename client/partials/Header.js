@@ -1,138 +1,117 @@
 import { ReactiveVar } from 'meteor/reactive-var';
-const currentUser = new ReactiveVar('');
+const form = new ReactiveVar('');
 const loggedIn = new ReactiveVar(false);
+const showSideBar = new ReactiveVar(false);
 
-Template.Header.onRendered(() => {
-  Tracker.autorun(()=> {
-    //Sign in or sign up
-    const authButtons = $('#authButtons');
-    const toSignUpForm = $('#toSignUpForm');
-    const toSignInForm = $('#toSignInForm');
-
-    //Sign up form
-    const signUpForm = $('#signUpForm');
-    const toSignIn = $('#toSignIn');
-    const signUpEmailInput = $('#signUpEmailInput');
-    const signUpPasswordInput = $('#signUpPasswordInput');
-    const rePassInput = $('#reenterPasswordInput');
-    const signUpButton = $('#signUpButton');
-
-    //Sign in form
-    const signInForm = $('#signInForm');
-    const toSignUp = $('#toSignUp');
-    const signInButton = $('#signInButton');
-    const signInEmailInput = $('#signInEmailInput');
-    const signInPasswordInput = $('#signInPasswordInput');
-
-    const currentSignedUser = $('#currentSignedUser');
-    const signOutButton = $('#signOutButton');
-
-    // if(loggedIn.get()) {
-    //   console.log(currentUser.get());
-    //   toggleHidden(authButtons, currentSignedUser);
-    // }
-
-    signUpButton.click(function() {
-      signUp()
-        .then(() => {
-          if(loggedIn.get()) {
-            toggleHidden(signUpForm, currentSignedUser);
-          } else {
-            console.log('Wrong password or email');
-          }
-        })
-        .catch((err) => {
-          console.log("err: ", err);
-        })
-    })
-
-    signInButton.click(function() {
-      signIn()
-        .then(() => {
-          console.log(currentUser.get());
-          if(loggedIn.get()){
-          toggleHidden(signInForm, currentSignedUser);
-          }
-        })
-        .catch((err) => {
-          console.log("err: ", err);
-        })
+Template.Header.events({
+  'click #toSignUp': () => {
+    form.set('signUp');
+  },
+  'click #toSignIn': () => {
+    form.set('');
+  },
+  'submit #signUpForm': (e) => {
+    e.preventDefault();
+    signUp(..._.map($('#signUpForm').serializeArray(), (el) => el.value))
+      .then((user) => {
+        Session.set('currentUser', user.email);
+        setCookie('current_user', user.email, 1);
+        user.getIdToken().then(data => {
+          setCookie('access_token=', data, 1);
+        });
+        showSideBar.set(false);
       })
-
-    signOutButton.click(function() {
-      signOut();
-      toggleHidden(currentSignedUser, authButtons);
-    })
-
-    toSignUpForm.click(function() {
-      toggleHidden(authButtons, signUpForm);
-    });
-
-    toSignInForm.click(function() {
-      toggleHidden(authButtons, signInForm);
-    });
-
-    toSignIn.click(function() {
-      toggleHidden(signUpForm, signInForm);
-    });
-
-    toSignUp.click(function() {
-      toggleHidden(signInForm, signUpForm);
-    });
-
-    async function signUp() {
-      const email = signUpEmailInput.val();
-      const password = signUpPasswordInput.val();
-      const confirmPassword = rePassInput.val();
-
-      if(password !== confirmPassword) {
-        console.log('Passwords don\'t match');
-      } else {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then((user) => {
-            loggedIn.set(true);
-            currentUser.set(user.email);
-          })
-          .catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log('Error message: ', error.message);
-          });
-      }
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log('Error message: ', error.message);
+      })
+  },
+  'submit #signInForm': (e) => {
+    e.preventDefault();
+    signIn(..._.map($('#signInForm').serializeArray(), (el) => el.value))
+      .then((user) => {
+        setCookie('current_user', user.email, 1);
+        Session.set('currentUser', user.email);
+        showSideBar.set(false);
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log('Error message: ', error.message);
+      })
+  },
+  'click #signOutButton': () => {
+    signOut()
+      .then(() => {
+        setCookie('current_user', '', 0);
+        Session.set('currentUser', '');
+      })
+      .catch((err) => {
+        console.log('Error in signOut: ', err);
+      })
+  },
+  'click .icon': () => {
+    if(showSideBar.get()) {
+      showSideBar.set(false);
+    } else {
+    showSideBar.set(true);
     }
-
-    async function signIn() {
-      const email = signInEmailInput.val();
-      const password = signInPasswordInput.val();
-
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((user) => {
-                
-                loggedIn.set(true);
-                currentUser.set(user.email);
-        })
-        .catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log('Sign-in error: ', errorMessage);
-          });
-    }
-
-    function signOut() {
-        firebase.auth().signOut()
-          .then(function() {console.log('Signed out');})
-          .catch(function(err) {console.log('Sign out err: ', err);});
-      }
-
-    function toggleHidden(elAddClass, elRemoveClass) {
-        elAddClass.addClass('hidden');
-        elRemoveClass.removeClass('hidden');
-      }
-  })
+  }
 })
 
 Template.Header.helpers({
   currentUser: () => {
-    return currentUser.get();
+    return Session.get('currentUser') || getCookie('current_user');
+  },
+  openForm: () => {
+    return form.get();
+  },
+  showSideBar: () => {
+    return showSideBar.get();
   }
 })
+
+// Template.registerHelper('or', (a, b) => {
+//   return a || b;
+// })
+
+function signUp(email, password, confirmPassword) {
+   if(password !== confirmPassword) {
+     return Promise.reject(new Error('Passwords don\'t match'));
+   } else {
+     return firebase.auth().createUserWithEmailAndPassword(email, password);
+
+   }
+ }
+
+ function signIn(email, password) {
+   return firebase.auth().signInWithEmailAndPassword(email, password);
+  }
+
+
+ function signOut() {
+   return firebase.auth().signOut();
+  }
+
+  function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+  }
+
+  function setCookie(cname, cvalue, exdate) {
+    var date = new Date();
+    date.setTime(date.getTime() + (exdate*24*60*60*1000));
+    var expires = "expires=" + date.toUTCString();
+    document.cookie = cname + '=' + cvalue + ';' + expires + ";path=/";
+  }

@@ -5,56 +5,56 @@
         <h1 class="ui header">Weather Now</h1>
       </a>
     </div>
-    <div style="float:right">
-      <div id="currentSignedUser" class="hidden">
-        {{#if currentUser}}
-        <p style="display:inline-block; margin-right: 10px">{{currentUser}}</p>
-        <p id="signOutButton" style="display:inline-block; cursor: pointer">Sign out</p>
-        {{/if}}
-      </div>
-      <div id="authButtons">
-        <h4 id="toSignUpForm" style="margin-bottom: 2.5px">Sign up</h4>
-        <h5 style="margin: 0px">or</h5>
-        <h4 id="toSignInForm" style="margin-top: 2.5px">Sign in</h4>
-      </div>
-      <div>
-        <form id="signUpForm" class="ui form hidden" action="index.html" method="post">
+    {{#unless currentUser}}
+    <i style="position:absolute;top:10px;right:10px;z-index:1;cursor:pointer" class="sign in big icon"></i>
+    {{/unless}}
+    {{#if currentUser }}
+    <div id="currentSignedUser" style="display:inline-block;position:absolute;top:10px;right:10px">
+      <p style="display:inline-block; margin-right: 10px">{{currentUser}}</p>
+      <p id="signOutButton" style="display:inline-block; cursor: pointer">Sign out</p>
+    </div>
+    {{/if}}
+    {{#if showSideBar}}
+      <div class="login">
+          {{#if openForm 'signUp'}}
+        <form id="signUpForm" class="ui form" method="post">
           <div class="field">
             <label>Your E-mail</label>
-            <input id="signUpEmailInput" type="text" placeholder="Your E-mail">
+            <input id="signUpEmailInput" name="email" type="text" placeholder="Your E-mail">
           </div>
           <div class="field">
             <label>Your password</label>
-            <input id="signUpPasswordInput" type="text" style="display:block" placeholder="Your password">
+            <input id="signUpPasswordInput" name="password" type="password" style="display:block" placeholder="Your password">
           </div>
           <div class="field">
             <label>Re-enter password</label>
-            <input id="reenterPasswordInput" type="text" style="display:block" placeholder="Re-enter password">
+            <input id="reenterPasswordInput" name="confirmPassword" type="password" style="display:block" placeholder="Re-enter password">
           </div>
-          <button id="signUpButton" type="button" class="ui button" name="button">Sign up</button>
+          <button id="signUpButton" type="submit" class="ui button" name="button">Sign up</button>
           <div style="padding-top:10px">
             <p style="display:inline-block">or</p>
             <p id="toSignIn" style="display:inline-block; padding-left:3px; cursor:pointer"> Sign in</p>
           </div>
         </form>
-
+          {{else}}
+        <form id="signInForm" class="ui form" action="index.html" method="post">
+          <div class="field">
+            <label>Your E-mail</label>
+            <input id="signInEmailInput" name="email" type="text" placeholder="Your E-mail">
+          </div>
+          <div class="field">
+            <label>Your password</label>
+            <input id="signInPasswordInput" name="password" type="password" style="display:block" placeholder="Your password">
+          </div>
+          <button id="signInButton" type="submit" class="ui button" name="button">Sign in</button>
+          <div style="padding-top:10px">
+            <p style="display:inline-block">or</p>
+            <p id="toSignUp" style="display:inline-block; padding-left:3px; cursor: pointer"> Sign up</p>
+          </div>
+        </form>
+        {{/if}}
       </div>
-      <form id="signInForm" class="ui form hidden" action="index.html" method="post">
-        <div class="field">
-          <label>Your E-mail</label>
-          <input id="signInEmailInput" type="text" placeholder="Your E-mail">
-        </div>
-        <div class="field">
-          <label>Your password</label>
-          <input id="signInPasswordInput" type="text" style="display:block" placeholder="Your password">
-        </div>
-        <button id="signInButton" type="button" class="ui button" name="button">Sign in</button>
-        <div style="padding-top:10px">
-          <p style="display:inline-block">or</p>
-          <p id="toSignUp" style="display:inline-block; padding-left:3px; cursor: pointer"> Sign up</p>
-        </div>
-      </form>
-    </div>
+    {{/if}}
   </div>
 
 
